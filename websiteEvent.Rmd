@@ -1,0 +1,97 @@
+---
+title: 'SOARs: Github Page Demo'
+author: "Brody Erlandson and Amartya K Maulik"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    toc_depth: 2
+---
+
+# Github Setup
+
+GitHub is a popular platform for hosting and collaborating on software projects. If you want to create a GitHub account, here are some steps and good practices to follow:
+
+1. Go to https://github.com/ and click on the Sign up button.
+2. Enter your email address, username and password. Use an email that you will likely have forever (not a school email), as this will be your primary way of verifying your identity and recovering your account if needed.
+3. Choose the free plan and you can set it up as a student account to get some extra free features.
+4. Verify your email address by clicking on the link that GitHub sends you.
+5. Congratulations, you have created your GitHub account!
+
+Some good practices to follow when choosing a username are:
+
+- Use a username that is similar or contains your real first and/or last name. This will make it easier for others to recognize you and find you on GitHub.
+- Avoid using special characters, spaces or punctuation in your username. These can cause problems with some tools and services that integrate with GitHub.
+- Choose a username that is not offensive, misleading or infringing on someone else's rights. GitHub reserves the right to suspend or terminate accounts that violate their terms of service or community guidelines.
+
+# Github Pages Set up
+
+I have set up a repository that makes a website based off the minimal theme. I have made this to be particularly easy and efficient to setup. [Here](https://brodyee.github.io/brodyminitab/) is a demo of the website with "Professor Whiskers". We will show how to set this up, but will provide resources to some alternatives option if this setup is not preferred.
+
+## Clone
+
+To get started with setting up the website, you will need to clone the repository. There are two ways to do this:
+
+### First way:
+
+1. Copy the following URL: https://github.com/brodyee/brodyminitab
+2. Go to your Github profile, click on the "Repositories" tab, and then click on the green "New" button to create a new repository.
+3. Under the "Import a repository" section, paste the URL you copied in step 1.
+4. Name your repository in the format "username.github.io".
+5. Keep the repository public.
+6. Click "Import" and wait for the repository to finish importing.
+7. Once the import is complete, check that the repository is up and running.
+
+### Second way:
+
+1. Go to the following URL: https://github.com/brodyee/brodyminitab
+2. Click on the green "Code" button to download the repository as a ZIP file.
+3. Unzip the downloaded file.
+4. Create a new empty repository in the format "username.github.io".
+5. Add the files from the unzipped repository to the new repository.
+6. Move the `default.html` file to the `_layouts` folder by editing the file, adding `_layouts/` before `default.html` in the file path, and saving the changes.
+7. Wait for the repository to finish loading and check that it is up and running.
+
+By following either of these methods, you will be able to clone the repository and proceed with setting up your Github Pages website.
+
+## Setting up the site
+
+Once you have successfully cloned the repository and have it up and running, you can begin setting up your website. The website is based on the minimal theme and consists of several tabs, each with its own associated markdown file. 
+
+To add your own content, edit the markdown files associated with each tab. For the "resume" tab, navigate to the `_layouts` folder and locate the `default.html` file. In this file, scroll down to the "Formatting Tabs" section and slightly below that, you will find an "ADD RESUME HERE" comment. Replace the file path `catStatResume.pdf` with your own resume file path that you added to the main repository folder.
+
+To add your own photo to the site, go to the `index.md` and `_config.yml` files in the main repository folder. In the YAML header of both files, replace `catStat.png` with your own photo file path that you added to the main repository folder.
+
+To change the name displayed on the site, go to the `index.md` and `_config.yml` files and locate the YAML header. Replace the name "Professor Whiskers" with your own first and last name.
+
+With these changes made, you can preview your site and make any additional modifications as needed. By following these instructions, you will be able to set up a personalized Github Pages website using the minimal theme with ease.
+
+Lastly, you can add and delete tabs by going to the `default.html` file in the `_layouts` folder. There you can comment out a tab with `<!-- commnet content -->`. Each tab starts with `<input type="radio" name="tabs" ...` and ends with `</div>`. These are all contained in the "Formatting Tabs" section, in order.
+
+# Alternative's 
+
+## Github Pages
+
+If you want to create a website using GitHub Pages with a theme, you can follow these steps:
+
+- Create a new repository for your website. The repository name should be username.github.io, where username is your GitHub username. For example, if your username is octocat, the repository name should be octocat.github.io.
+- Choose a theme for your website from the Jekyll Theme Chooser at https://pages.github.com/themes/. You can preview how each theme looks and read the instructions on how to use it.
+- Download your chosen theme as a ZIP file and unzip it on your computer. You should see a folder with files like _config.yml, index.md, and README.md.
+- Move the theme files into your new repository folder. You can use GitHub Desktop or any other tool to do this.
+- Edit the _config.yml file to change the title and description of your website. You can also add other settings like social media links, navigation menus, and plugins. For more information, see https://jekyllrb.com/docs/configuration/.
+- Edit the index.md file to add the content for your homepage. You can use Markdown syntax to format your text and add images, links, and other elements. For more information, see https://www.markdownguide.org/.
+- Commit and push your changes to GitHub using GitHub Desktop or any other tool. Your website should be published at username.github.io within a few minutes.
+- Optionally, you can watch this video tutorial on how to create a GitHub Pages website with a theme: https://www.youtube.com/watch?v=BA_c3bGQXlQ.
+
+For more information, see https://docs.github.com/en/pages.
+
+## Google Sites
+
+If you want to create a website for your personal or professional use, Google Sites is a free and easy option. Google Sites lets you build a website without any coding or design skills. You can use templates, drag and drop elements, and integrate with other Google products. Here are some links to help you get started with Google Sites:
+
+- How to create a Google Site: https://support.google.com/sites/answer/98081
+- How to customize your Google Site: https://support.google.com/sites/answer/90538
+- How to publish and share your Google Site: https://support.google.com/sites/answer/6372880
+
+
