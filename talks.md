@@ -1,2 +1,4 @@
+- Talk to Colorado State Statistics Undergraduate Students about internships
+  - [Powerpoint](https://brodyee.github.io/internPres.pdf) 
 - SOARs Event Presentations
   - [Github Page Demo](https://brodyee.github.io/talks/websiteEvent.html)
