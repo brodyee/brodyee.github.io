@@ -3,7 +3,7 @@ The following courses that I have taught, and some contain lecture content:
   - STAA 577: Statistical Learning and Data Mining, Fall 2023, Graduate Teachers Assistant.
   - STAA 567: Computational and Simulation Methods, Fall 2023, Graduate Teachers Assistant. 
   - STAA 574: Methods in Multivariate Analysis, Spring 2023, Graduate Teachers Assistant.
-  - STAA 575: Applied Bayesian Statistics, Spring 2023, Graduate Teachers Assistant. [rstan Lecture](https://brodyee.github.io/Courses/guestLecs/stanLec.html)
+  - STAA 575: Applied Bayesian Statistics, Spring 2023, Graduate Teachers Assistant. [rstan Lecture](https://brodyee.github.io/Courses/guestLecs/stanLecPrev.html) [Updated rstan lec.](https://brodyee.github.io/Courses/guestLecs/stanLec.html)
   - STAT 204: Statistics With Business Applications, Falls 2022, Graduate Teachers Assistant.
   - STAT 301: Introduction to Applied Statistical Methods, Fall 2022, Graduate Teachers Assistant.
 - Washtenaw Community College
