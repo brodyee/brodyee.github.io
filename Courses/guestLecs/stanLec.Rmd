@@ -1,0 +1,439 @@
+---
+title: "Stan Lecture"
+author: "Brody Erlandson"
+output:
+  html_document:
+    code_folding: show
+    toc: true
+    toc_float: true
+    toc_depth: 2
+---
+
+```{r, echo=FALSE, warning=FALSE, include=FALSE}
+library(rstan)
+library(latex2exp)
+set.seed(308721)
+```
+# About Stan
+
+Stan is a probabilistic programming language that allows you to easily set up samplers for Bayesian inference. It is written in C++, so it will be faster (when doing the same sampler) than using base R. You should use Stan when you don't have/want to create a unique sampler for a specific model, or when you want a quick implementation of a model before creating a sampler. Stan has a MCMC samplers and variational inference you can choose from, but this introduction will just show Hamiltonian Monte Carlo (HMC). Later in the course you will learn about how a different MCMC sampler works. For now we can just note that HMC does not require conjugacy nor a closed form posterior to use.
+
+We can use Stan in R with `rstan`, which we can install with:
+
+`install.packages("rstan", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))`
+
+# Problem set up
+
+We will start with a simple problem:
+
+$$\begin{aligned}
+Y_1, \dots, Y_n|\theta &\overset{iid}{\sim} Pois(\theta) \\
+\theta &\sim gamma(4, 1/2)
+\end{aligned}$$
+
+```{r, echo=FALSE, warning=FALSE}
+x <- seq(0, 20, by=.01)
+plot(x, dgamma(x, 4, rate = 1/2), type = "l",
+     main="Prior Distribution",
+     ylab="Density",
+     xlab=TeX("\\theta"))
+```
+
+Note that this is a conjugate prior, so normally we would not use Stan, as it is a bit overboard for this problem. However, we are using this so that we can compare to what the actual posterior is. We will also look at a more complex example in a bit. First lets note the posterior distribution:
+
+$$\theta|Y_1, \dots, Y_n \sim gamma(4+\sum_{i=1}^ny_i, 1/2+n)$$
+
+# Stan Set up
+
+To use `rstan` we need to create a `.stan` file that tells stan what our model is. You can create this in a text file. Below is an outline of what it involves:
+
+```
+data {
+  // declaration of variables that are read in as data (Knowns)
+}
+transformed data {
+   // can transform data here if needed
+}
+parameters {
+   // declarations of parameter (Unknows)
+}
+transformed parameters {
+   // can transform parameters here if needed
+}
+model {
+   // declaration of prior distribution and likelihood
+}
+generated quantities {
+   // prediction and diagnotics
+}
+```
+
+You can read in more depth [here](https://mc-stan.org/docs/reference-manual/blocks.html)
+
+For our simple model we will use the following `.stan` file:
+
+```
+// saved as pois.stan
+data {
+  int<lower=1> n;               // Number of samples
+  int<lower=0> y[n];            // Sample vector
+  real<lower=0> alpha;          // First gamma prior parameter
+  real<lower=0> beta;           // Second gamma prior parameter
+}
+parameters {
+   real<lower=0> theta;         // Our parameter of interest
+}
+model {
+   theta ~ gamma(alpha, beta);  // Prior
+   y ~ poisson(theta);          // Likelihood
+}
+```
+# Running our Model
+
+Below we can see the code for the data set up and running the model with `rstan`:
+
+```{r, warning=FALSE, results='hide'}
+# Generating the data
+n <- 300
+y <- rpois(n, 7)
+
+# Running rstan sampler
+stanDat <- list(n = n, y = y,
+                alpha=4, beta=.5) # setting up data for stan
+stanFit <- stan(file = "pois.stan", # Stan file
+                data = stanDat, # Data
+                warmup = 500, # Number of iteration to burn-in
+                iter = 1500, # Total number of iterations
+                chains = 4) # Number of chains to run
+```
+
+After running the sampler we can get some summaries of the posterior:
+
+```{r, warning=FALSE}
+stanFit
+```
+
+We can also get the entire sample with `extract(stanFit)`, this would be useful if you wanted to make unique plots. Though the `rstan` library has some built in plotting that is useful for a quick look at whats going on.
+
+```{r, warning=FALSE}
+traceplot(stanFit) # Check for convergence 
+stan_hist(stanFit, binwidth=.05)
+stan_dens(stanFit)
+```
+
+Our actual posterior mean is `r round((3+sum(y))/(1/2+n), 2)`, which is quite close to the estimated mean by the sampler. We can see the true posterior plotted below:
+
+```{r, echo=FALSE}
+x <- seq(6.25, 7.3, by=.01)
+plot(x, dgamma(x, 3+sum(y), rate=1/2+n), type = "l",
+     main="Posterior Distribution",
+     ylab="Density",
+     xlab=TeX("\\theta|$y_1$, ..., $y_n$"))
+```
+
+# Non-conjugate Example
+
+We'll now look at the following model:
+
+$$\begin{aligned}
+Y_1, \dots, Y_n|\theta, \sigma &\overset{iid}{\sim} N(\theta, \sigma) \\
+\theta &\sim t(1) \\
+\sigma^2 &\sim gamma(2,1)
+\end{aligned}$$
+
+This is a non-conjugate model, however we can still easily model with with Stan using the following:
+
+```
+// saved as norm.stan
+data {              
+ int<lower = 1> n;     // Number of samples
+ vector[n] y;          // Sample vector
+ real df;              // Prior df
+ real<lower=0> alpha;  // Prior scale
+ real<lower=0> beta;   // Prior rate
+}
+parameters {        
+ real Theta;          // Mean unknow
+ real <lower=0> Sig2; // variance unknow   
+}
+model {
+ // Priors:
+ target += student_t_lpdf(Theta | df, 1, 1);    // lpdf is the log of the density
+ target += gamma_lpdf(Sig2 | alpha, beta);
+ 
+ // Likelihood:
+ target += normal_lpdf(y | Theta, sqrt(Sig2));
+}
+```
+
+Here are plots of the Priors:
+
+```{r, echo=FALSE}
+par(mfrow=c(1,2))
+
+x <- seq(0, 10, by=.01)
+plot(x, dgamma(x, 4, rate=1), type = "l",
+     main=TeX("$\\sigma^2$ Prior Distribution"),
+     ylab="Density",
+     xlab=TeX("$\\sigma^2$"))
+
+x <- seq(-7, 7, by=.01)
+plot(x, dt(x, 1), type = "l",
+     main=TeX("\\theta Prior Distribution"),
+     ylab="Density",
+     xlab=TeX("\\theta"))
+```
+
+Now we can set up the data and model to run:
+
+```{r, warning=FALSE, results='hide'}
+# Generating the data
+n <- 500
+y <- rnorm(n, 1.415, sqrt(2.718))
+
+# Running rstan sampler
+stanDat <- list(n = n, y = y, df=1,
+                alpha=4, beta=1) # setting up data for stan
+stanFit <- stan(file = "norm.stan", # Stan file
+                data = stanDat, # Data
+                warmup = 500, # Number of iteration to burn-in
+                iter = 1500, # Total number of iterations
+                chains = 4) # Number of chains to run
+```
+
+Again we can look at our summary output. 
+
+```{r, warning=FALSE}
+stanFit
+```
+
+And we can look at the base plots again.
+
+```{r, warning=FALSE}
+traceplot(stanFit) # Check for convergence
+stan_hist(stanFit, binwidth=.01)
+stan_dens(stanFit)
+```
+
+# Random Effects Model
+
+Now, we'll explore a model with random effects for each group. We'll write two 
+Stan models: one using a loop and another using vectorization. After running 
+both, we'll compare their efficiency. The model is as follows:
+
+$$
+\begin{aligned}
+Y_{ij}|\alpha, \beta_i, \sigma &\overset{iid}{\sim} N(\alpha + \beta_i, \sigma) \\
+\beta_i &\overset{iid}{\sim} N(0, \tau) \\
+\alpha &\sim N(0, 10) \\
+\sigma &\sim Inv-Gamma(3, 6) \\
+\tau &\sim Inv-Gamma(3, 6)
+\end{aligned}
+$$
+
+where $Y_{ij}$ is the $j$th observation in the $i$th group, $\alpha$ is the 
+overall mean, $\beta_i$ is the group-specific shift, $\sigma$ is the error
+standard deviation, and $\tau$ is the group effect standard deviation.
+
+## Stan Models
+
+### Model with Loop
+
+The first Stan model uses a loop over groups.
+
+```
+// saved as random_effects_loop.stan
+data {
+  int<lower=1> N;            // Total number of observations
+  int<lower=1> G;            // Number of groups
+  int<lower=1, upper=G> group[N];  // Group index for each observation
+  vector[N] y;               // Response variable
+}
+parameters {
+  real alpha;                // Overall mean
+  vector[G] beta;            // Group-specific shifts
+  real<lower=0> sigma;       // Error standard deviation
+  real<lower=0> tau;         // Group effect standard deviation
+}
+model {
+  alpha ~ normal(0, 10);
+  for (i in 1:G) {
+    beta[i] ~ normal(0, tau);
+  }
+  sigma ~ inv_gamma(3, 6);
+  tau ~ inv_gamma(3, 6);
+
+  for (i in 1:N) {
+    y[i] ~ normal(alpha + beta[group[i]], sigma);
+  }
+}
+```
+
+### Model with Vectorization
+
+The second model uses vectorization for greater efficiency.
+
+```
+// saved as random_effects_vectorized.stan
+data {
+  int<lower=1> N;            // Total number of observations
+  int<lower=1> G;            // Number of groups
+  int<lower=1, upper=G> group[N];  // Group index for each observation
+  vector[N] y;               // Response variable
+}
+parameters {
+  real alpha;                // Overall mean
+  vector[G] beta;            // Group-specific shifts
+  real<lower=0> sigma;       // Error standard deviation
+  real<lower=0> tau;         // Group effect standard deviation
+}
+model {
+  alpha ~ normal(0, 10);
+  beta ~ normal(0, tau);
+  sigma ~ inv_gamma(3, 6);
+  tau ~ inv_gamma(3, 6);
+
+  y ~ normal(alpha + beta[group], sigma);
+}
+```
+
+## Model Fitting and Comparison
+
+Now, let's fit both models in R and compare their run times.
+
+```{r, results='hide', warning=FALSE}
+# simulate data
+set.seed(1234)
+Y <- rnorm(500, 20, 2)
+groupShift <- rep(rnorm(5, 0, 3), each = 100)
+Y <- Y + groupShift
+
+# Data for Stan
+stan_data <- list(N = 500, G = 5, group = rep(1:5, each = 100), y = Y)
+
+# Fit the loop model
+start_time <- Sys.time()
+fit_loop <- stan(file = "random_effects_loop.stan", data = stan_data, 
+                 iter = 2000, warmup = 500, chains = 4)
+end_time <- Sys.time()
+time_loop <- end_time - start_time
+
+# Fit the vectorized model
+start_time <- Sys.time()
+fit_vectorized <- stan(file = "random_effects_vectorized.stan", data = stan_data, 
+                       iter = 2000, warmup = 500, chains = 4)
+end_time <- Sys.time()
+time_vectorized <- end_time - start_time
+```
+
+```{r, echo=FALSE, warning=FALSE}
+# Comparison table
+run_times <- data.frame(Model = c("Loop", "Vectorized"), 
+                        Time = c(time_loop, time_vectorized))
+knitr::kable(run_times, caption = "Comparison of Run Times")
+```
+
+This table provides a comparison of the efficiency gains achieved through
+vectorization in Stan. This is a simple example, but the efficiency gains
+can be much greater for more complex models.
+
+## Results
+
+Now, let's look at the results of the vectorized model.
+
+```{r, warning=FALSE}
+fit_vectorized
+```
+
+We can see the alpha is near 20, we can compare this to the true values betas 
+too:
+
+```{r, echo=FALSE}
+betas <- groupShift[seq(1, 500, by = 100)]
+
+# Table for betas
+betas_table <- data.frame(Group = 1:5, Beta = betas)
+knitr::kable(betas_table, caption = "True Values of Beta")
+```
+
+We can see that the estimated betas are close to the true values, and the 
+credible intervals contain the true values.
+
+# `rstanarm` Package
+
+We will explore the use of `stan_glm`, a function from the `rstanarm` package, 
+which allows for fitting Generalized Linear Models (GLMs). However, 
+`rstanarm` has many other functions for fitting models, including 
+`stan_gamm4` for fitting generalized additive mixed models,
+`stan_lmer` for fitting linear mixed effects models, and `stan_jm` for fitting
+joint models for longitudinal and time-to-event data. 
+
+## Model Specification
+
+Our model can be expressed in the following form:
+
+$$
+\begin{aligned}
+Y_i|\beta, \sigma &\overset{iid}{\sim} Binomial(1, p_i) \\
+p_i &:= logit(\beta_0 + \beta_1x_{i1} + \beta_2x_{i2}) \\
+\beta_i &\sim N(0, 2.5^2) 
+\end{aligned}
+$$
+
+where $Y_i$ is the response variable for the $i$th observation, $x_{i1}$ and
+$x_{i2}$ are the predictor variables for the $i$th observation, and $\beta_0$,
+$\beta_1$, and $\beta_2$ are the coefficients for the intercept and the two
+predictors, respectively.
+
+## Fitting the Model with stan_glm
+
+Now we will fit the model using `stan_glm` from the `rstanarm` package.
+
+```{r, warning=FALSE, results='hide'}
+library(rstanarm)
+
+logit <- function(x) {
+  1 / (1 + exp(-x))
+}
+
+# Generating logistic data
+n <- 200  # number of observations
+p <- 2    # number of predictors
+X <- matrix(rnorm(n * p), n, p)  # predictor matrix
+X <- cbind(1, X)  # add intercept
+beta <- c(-1, 2.5, -1.5)  # true beta values
+
+Y <- rbinom(n, 1, logit(X %*% beta))  # response vector
+X <- X[, -1]  # remove intercept from predictor matrix
+
+# Fit model with stan_glm
+fit <- stan_glm(Y ~ X, data = data.frame(Y, X), 
+                family = binomial(link = "logit"),
+                prior = normal(0, 2.5, autoscale = FALSE), 
+                prior_intercept = normal(0, 2.5, autoscale = FALSE),
+                chains = 2, iter = 4000, warmup = 1000)
+```
+
+## Results and Comparison
+
+Finally, let's compare the estimated coefficients from the `stan_glm` model to 
+our true beta values.
+
+```{r}
+summary(fit)
+
+beta
+```
+
+We can see it is quite close to the true values. 
+
+# Resources and References
+
+As you can image there is a lot more you can do. Below are some documentation links that should allow you to explore and gather what you need. 
+
+- [Stan Distributions](https://mc-stan.org/docs/functions-reference/continuous-distributions.html)
+- [Stan Examples](https://mc-stan.org/docs/stan-users-guide/example-models.html#example-models.part)
+- [rstan getting started](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started)
+- [Stan blocks and general reference manual](https://mc-stan.org/docs/reference-manual/blocks.html)
+- [rstanarm](https://mc-stan.org/rstanarm/)
+
