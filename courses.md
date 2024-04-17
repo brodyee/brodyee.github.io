@@ -1,6 +1,8 @@
 The following courses that I have taught, and some contain lecture content:
 - Colorado State University
-  - STAA 577: Statistical Learning and Data Mining, Fall 2023, Graduate Teachers Assistant.
+  - STAA 578: Machine Learning, Spring 2024, Graduate Teachers Assistant.
+  - STAA 565: Quantitative Reasoning, Spring 2024, Graduate Teachers Assistant.
+  - STAA 577: Statistical Learning and Data Mining, Fall 2023 to Spring 2024, Graduate Teachers Assistant.
   - STAA 567: Computational and Simulation Methods, Fall 2023, Graduate Teachers Assistant. 
   - STAA 574: Methods in Multivariate Analysis, Spring 2023, Graduate Teachers Assistant.
   - STAA 575: Applied Bayesian Statistics, Spring 2023, Graduate Teachers Assistant. [rstan Lecture](https://brodyee.github.io/Courses/guestLecs/stanLecPrev.html) [Updated rstan lec.](https://brodyee.github.io/Courses/guestLecs/stanLec.html)
