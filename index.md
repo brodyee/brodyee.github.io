@@ -14,7 +14,7 @@ I am currently a Statistic PhD Pre-canidate at Colorado State University, where 
 
 ## [Research and Projects](researchAndProjects.md)
 
-## [Resume](ResumeJan23.pdf)
+## [Resume](ResumeMarch26.pdf)
 <!--
 ## Welcome to GitHub Pages
 
