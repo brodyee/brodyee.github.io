@@ -1,4 +1,13 @@
+- JSM 2026: Organized and Presented at a Topic Contributed Session
+  - Session Title: Advances in Methodology for Complex Medical Trial Designs
+- JSM 2025: Presented at a Topic Contributed Session [Slides](https://brodyee.github.io/talks/JSM2025Presentation.pdf) (updated Fall 2025)
+  - Session Title: Methods for multivariate response data with complex exposure-response relations
+- CSU GradShow 2025: Poster Presenation
+- Front Range Microbiome Symposium 2025: Poster Presentation
+- CSU GradShow 2024: Poster Presenation
+- JSM 2024: Presented at a Topic Contributed Session (on behalf of Dr. Matt Koslovsky)
+  - Session Title: Recent Advances in Bayesian Methods for Complex Structured Data
+- Front Range Microbiome Symposium 2024: Poster Presentation
 - Talk to Colorado State Statistics Undergraduate Students about internships
-  - [Powerpoint](https://brodyee.github.io/internPres.pdf) 
 - SOARs Event Presentations
   - [Github Page Demo](https://brodyee.github.io/talks/websiteEvent.html)
