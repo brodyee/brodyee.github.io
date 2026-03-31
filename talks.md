@@ -1,5 +1,6 @@
 - JSM 2026: Organized and Presented at a Topic Contributed Session
   - Session Title: Advances in Methodology for Complex Medical Trial Designs
+- Presented at Fall 2025 ASA CO-WY Meeting
 - JSM 2025: Presented at a Topic Contributed Session [Slides](https://brodyee.github.io/talks/JSM2025Presentation.pdf) (updated Fall 2025)
   - Session Title: Methods for multivariate response data with complex exposure-response relations
 - CSU GradShow 2025: Poster Presenation
