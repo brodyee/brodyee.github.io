@@ -1,14 +1,21 @@
 - JSM 2026: Organized and Presented at a Topic Contributed Session
   - Session Title: Advances in Methodology for Complex Medical Trial Designs
+- American Causal Inference Conference (ACIC) 2026: Poster Presentation
 - Presented at Fall 2025 ASA CO-WY Meeting
-- JSM 2025: Presented at a Topic Contributed Session [Slides](https://brodyee.github.io/talks/JSM2025Presentation.pdf) (updated Fall 2025)
+- JSM 2025: Presented at a Topic Contributed Session 
   - Session Title: Methods for multivariate response data with complex exposure-response relations
-- CSU GradShow 2025: Poster Presenation
+- CSU GradShow 2025: Poster Presentation
 - Front Range Microbiome Symposium 2025: Poster Presentation
-- CSU GradShow 2024: Poster Presenation
+- CSU GradShow 2024: Poster Presentation
 - JSM 2024: Presented at a Topic Contributed Session (on behalf of Dr. Matt Koslovsky)
   - Session Title: Recent Advances in Bayesian Methods for Complex Structured Data
 - Front Range Microbiome Symposium 2024: Poster Presentation
 - Talk to Colorado State Statistics Undergraduate Students about internships
 - SOARs Event Presentations
-  - [Github Page Demo](https://brodyee.github.io/talks/websiteEvent.html)
+  - [GitHub Page Demo](https://brodyee.github.io/talks/websiteEvent.html)
+
+## Awards
+- Duane Boes Scholarship 2026
+- CSU Statistics Department Travel Award 2026
+- CBMS Conference Travel Award 2023
+- CSU Statistics Department First Year Scholarship 2022
