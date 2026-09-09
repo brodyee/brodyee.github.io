@@ -1,5 +1,8 @@
 The following courses that I have taught, and some contain lecture content:
 - Colorado State University
+  - Coding and Cookies:
+    - Intro to Python
+    - Intro to Git/Github 
   - STAA 578: Machine Learning, Spring 2024, Graduate Teachers Assistant.
   - STAA 565: Quantitative Reasoning, Spring 2024, Graduate Teachers Assistant.
   - STAA 577: Statistical Learning and Data Mining, Fall 2023 to Spring 2024, Graduate Teachers Assistant.
